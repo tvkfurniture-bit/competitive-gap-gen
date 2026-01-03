@@ -11,8 +11,7 @@ import time
 # Load environment variables (API Key will be ignored, 
 # but config remains structured)
 load_dotenv()
-# W291 Fix applied: No trailing space after load_dotenv()
-GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY") # W291 fixed here
 
 # Load the NLP model once
 try:
@@ -37,8 +36,10 @@ def get_competitor_list(target_name: str, location: str,
     search_query = (
         f"best {search_type} near {location} reviews"
     )
-    # E501 Fix: Breaking the print statement
-    print((f"-> 1. Searching Google for: '{search_query}'..."))
+    # E501 Fix: Breaking the long print statement
+    print(
+        (f"-> 1. Searching Google for: '{search_query}'...")
+    )
 
     competitor_data = []
 
@@ -107,7 +108,7 @@ def model_revenue_gap(competitor_data: list) -> float:
     'Competitive Dominance Score'.
     This is the core 'magic lure' that justifies the $499 subscription.
     """
-    df = pd.DataFrame(competitor_data)
+    df = pd.DataFrame(competitor_data) # W291 fixed here
 
     # Scoring: Rating is weighted 10x, reviews are weighted 1/50th.
     df['dominance_score'] = (
