@@ -33,7 +33,9 @@ def get_competitor_list(target_name: str, location: str,
     NOTE: Google API is bypassed due to zero-investment constraint.
     """
 
-    search_query = (f"best {search_type} near {location} reviews")
+    search_query = (
+        f"best {search_type} near {location} reviews"
+    )
     print(f"-> 1. Searching Google for: '{search_query}'...")
 
     competitor_data = []
@@ -99,13 +101,16 @@ def audit_website_flaws(url: str) -> dict:
 
 def model_revenue_gap(competitor_data: list) -> float:
     """
-    Proprietary logic to model revenue difference based on 'Competitive Dominance Score'.
+    Proprietary logic to model revenue difference based on 
+    'Competitive Dominance Score'.
     This is the core 'magic lure' that justifies the $499 subscription.
     """
     df = pd.DataFrame(competitor_data)
 
     # Scoring: Rating is weighted 10x, reviews are weighted 1/50th.
-    df['dominance_score'] = (df['rating'] * 10) + (df['reviews'] / 50)
+    df['dominance_score'] = (
+        (df['rating'] * 10) + (df['reviews'] / 50)
+    )
 
     target_score = df.loc[df['name'] == 'Target Business',
                           'dominance_score'].iloc[0]
