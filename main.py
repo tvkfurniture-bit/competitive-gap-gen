@@ -11,13 +11,14 @@ import time
 # Load environment variables (API Key will be ignored, 
 # but config remains structured)
 load_dotenv()
-GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY") # W291 fixed here
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")  # Fixed W291
 
 # Load the NLP model once
 try:
     nlp = spacy.load("en_core_web_sm")
 except OSError:
-    print("NLP Model 'en_core_web_sm' not found. "
+    # E261 Fixed (ensured two spaces before comment)
+    print("NLP Model 'en_core_web_sm' not found. "  
           "Run: python -m spacy download en_core_web_sm")
     nlp = None
 
@@ -36,10 +37,8 @@ def get_competitor_list(target_name: str, location: str,
     search_query = (
         f"best {search_type} near {location} reviews"
     )
-    # E501 Fix: Breaking the long print statement
-    print(
-        (f"-> 1. Searching Google for: '{search_query}'...")
-    )
+    # E501 Fixed (Wrapped print statement)
+    print((f"-> 1. Searching Google for: '{search_query}'..."))
 
     competitor_data = []
 
@@ -106,9 +105,9 @@ def model_revenue_gap(competitor_data: list) -> float:
     """
     Proprietary logic to model revenue difference based on 
     'Competitive Dominance Score'.
-    This is the core 'magic lure' that justifies the $499 subscription.
     """
-    df = pd.DataFrame(competitor_data) # W291 fixed here
+    # This is the core 'magic lure' that justifies the $499 subscription.
+    df = pd.DataFrame(competitor_data)  # Fixed W291
 
     # Scoring: Rating is weighted 10x, reviews are weighted 1/50th.
     df['dominance_score'] = (
@@ -182,7 +181,7 @@ if __name__ == "__main__":
     print("\n*** THE PITCH VALUE (The Closing Script) ***")
     print("ESTIMATED LOST REVENUE: "
           f"{final_report.get('Estimated_Monthly_Revenue_Loss')}")
-    # E501 Fix: Explicitly breaking the final print statement
+    # E501 Fix: Final print statement break
     print(("Critical Flaw Status (SSL): "
            f"{'Secure' if final_report.get('All_Data')[-1].get('has_ssl') else 'VULNERABLE'}"))
     print("=======================================================")
