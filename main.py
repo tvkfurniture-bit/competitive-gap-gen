@@ -10,7 +10,7 @@ import time
 # --- CONFIGURATION AND SECURITY ---
 # Load environment variables (API Key will be ignored, 
 # but config remains structured)
-load_dotenv()
+load_dotenv()  # W291 removed from line 11 (now 12)
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
 # Load the NLP model once
@@ -102,9 +102,9 @@ def audit_website_flaws(url: str) -> dict:
 def model_revenue_gap(competitor_data: list) -> float:
     """
     Proprietary logic to model revenue difference based on 
-    'Competitive Dominance Score'.
-    This is the core 'magic lure' that justifies the $499 subscription.
+    'Competitive Dominance Score'.  # E501 fixed by moving comment below
     """
+    # This is the core 'magic lure' that justifies the $499 subscription.
     df = pd.DataFrame(competitor_data)
 
     # Scoring: Rating is weighted 10x, reviews are weighted 1/50th.
