@@ -1,0 +1,6 @@
+requests
+pandas
+beautifulsoup4
+spacy
+nltk
+python-dotenv  # Crucial for securely loading API keys from the .env file
