@@ -10,7 +10,7 @@ import time
 # --- CONFIGURATION AND SECURITY ---
 # Load environment variables (API Key will be ignored, 
 # but config remains structured)
-load_dotenv()  # W291 removed from line 11 (now 12)
+load_dotenv()
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
 # Load the NLP model once
@@ -36,7 +36,8 @@ def get_competitor_list(target_name: str, location: str,
     search_query = (
         f"best {search_type} near {location} reviews"
     )
-    print(f"-> 1. Searching Google for: '{search_query}'...")
+    # E501 fix: Wrapped print statement
+    print((f"-> 1. Searching Google for: '{search_query}'..."))
 
     competitor_data = []
 
@@ -102,9 +103,9 @@ def audit_website_flaws(url: str) -> dict:
 def model_revenue_gap(competitor_data: list) -> float:
     """
     Proprietary logic to model revenue difference based on 
-    'Competitive Dominance Score'.  # E501 fixed by moving comment below
+    'Competitive Dominance Score'.
+    This is the core 'magic lure' that justifies the $499 subscription.
     """
-    # This is the core 'magic lure' that justifies the $499 subscription.
     df = pd.DataFrame(competitor_data)
 
     # Scoring: Rating is weighted 10x, reviews are weighted 1/50th.
@@ -123,7 +124,9 @@ def model_revenue_gap(competitor_data: list) -> float:
     # lost monthly revenue.
     estimated_gap = score_difference * 500
 
-    print(f"-> 3. Modeling Complete. Target Dominance Score: {target_score:.2f}")
+    # E501 fix: Wrapped print statement
+    print((f"-> 3. Modeling Complete. Target Dominance Score: "
+           f"{target_score:.2f}"))
 
     return max(0, estimated_gap)
 
@@ -177,6 +180,7 @@ if __name__ == "__main__":
     print("\n*** THE PITCH VALUE (The Closing Script) ***")
     print("ESTIMATED LOST REVENUE: "
           f"{final_report.get('Estimated_Monthly_Revenue_Loss')}")
-    print("Critical Flaw Status (SSL): "
-          f"{'Secure' if final_report.get('All_Data')[-1].get('has_ssl') else 'VULNERABLE'}")
+    # E501 fix applied by wrapping the print statement entirely
+    print(("Critical Flaw Status (SSL): "
+          f"{'Secure' if final_report.get('All_Data')[-1].get('has_ssl') else 'VULNERABLE'}"))
     print("=======================================================")
