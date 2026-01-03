@@ -3,4 +3,5 @@ pandas
 beautifulsoup4
 spacy
 nltk
-python-dotenv  # Crucial for securely loading API keys from the .env file
+python-dotenv
+googlesearch-python  # ADD THIS LINE
