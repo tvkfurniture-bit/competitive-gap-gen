@@ -8,7 +8,8 @@ from googlesearch import search
 import time
 
 # --- CONFIGURATION AND SECURITY ---
-# Load environment variables (API Key will be ignored, but config remains structured)
+# Load environment variables (API Key will be ignored, 
+# but config remains structured)
 load_dotenv()
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
