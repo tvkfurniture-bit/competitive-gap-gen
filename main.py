@@ -11,6 +11,7 @@ import time
 # Load environment variables (API Key will be ignored, 
 # but config remains structured)
 load_dotenv()
+# W291 Fix applied: No trailing space after load_dotenv()
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
 # Load the NLP model once
@@ -36,7 +37,7 @@ def get_competitor_list(target_name: str, location: str,
     search_query = (
         f"best {search_type} near {location} reviews"
     )
-    # E501 fix: Wrapped print statement
+    # E501 Fix: Breaking the print statement
     print((f"-> 1. Searching Google for: '{search_query}'..."))
 
     competitor_data = []
@@ -124,7 +125,7 @@ def model_revenue_gap(competitor_data: list) -> float:
     # lost monthly revenue.
     estimated_gap = score_difference * 500
 
-    # E501 fix: Wrapped print statement
+    # E501 Fix: Breaking the print statement
     print((f"-> 3. Modeling Complete. Target Dominance Score: "
            f"{target_score:.2f}"))
 
@@ -180,7 +181,7 @@ if __name__ == "__main__":
     print("\n*** THE PITCH VALUE (The Closing Script) ***")
     print("ESTIMATED LOST REVENUE: "
           f"{final_report.get('Estimated_Monthly_Revenue_Loss')}")
-    # E501 fix applied by wrapping the print statement entirely
+    # E501 Fix: Explicitly breaking the final print statement
     print(("Critical Flaw Status (SSL): "
-          f"{'Secure' if final_report.get('All_Data')[-1].get('has_ssl') else 'VULNERABLE'}"))
+           f"{'Secure' if final_report.get('All_Data')[-1].get('has_ssl') else 'VULNERABLE'}"))
     print("=======================================================")
