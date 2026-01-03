@@ -4,8 +4,8 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import spacy
 from dotenv import load_dotenv
-from googlesearch import search  # New dependency for search queries
-import time  # New dependency for polite scraping delays
+from googlesearch import search
+import time
 
 # --- CONFIGURATION AND SECURITY ---
 # Load environment variables (API Key will be ignored, but config remains structured)
@@ -16,61 +16,64 @@ GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 try:
     nlp = spacy.load("en_core_web_sm")
 except OSError:
-    print("NLP Model 'en_core_web_sm' not found. Run: python -m spacy download en_core_web_sm")
+    print("NLP Model 'en_core_web_sm' not found. "
+          "Run: python -m spacy download en_core_web_sm")
     nlp = None
 
 
 # --- CORE CRGG FUNCTIONS ---
 
-def get_competitor_list(target_name: str, location: str, search_type: str = "dentist", limit: int = 5) -> list:
+def get_competitor_list(target_name: str, location: str,
+                        search_type: str = "dentist", limit: int = 5) -> list:
     """
     Pivoted function: Uses compliant Google Search to find local business URLs.
     Simulates performance metrics (rating/reviews) based on search rank.
-    
+
     NOTE: Google API is bypassed due to zero-investment constraint.
     """
-    
+
     search_query = f"best {search_type} near {location} reviews"
     print(f"-> 1. Searching Google for: '{search_query}'...")
-    
+
     competitor_data = []
-    
+
     try:
-        # Use googlesearch-python to find the top results. 
-        # CRITICAL: 'pause=2' enforces a delay between requests for polite scraping.
+        # CRITICAL: 'pause=2' enforces a delay between requests for politeness.
         for url in search(search_query, num=limit, stop=limit, pause=2):
             rank = len(competitor_data) + 1
-            
+
             # --- SIMULATION BASED ON RANK (Zero-Investment Data) ---
             # Higher rank = better metrics. This creates the competitive baseline.
             simulated_reviews = 500 - (rank * 80)
             simulated_rating = 5.0 - (rank * 0.15)
-            
+
             competitor_data.append({
-                "name": f"Local Competitor Rank {rank}", 
-                "rating": round(max(4.2, simulated_rating), 1), 
+                "name": f"Local Competitor Rank {rank}",
+                "rating": round(max(4.2, simulated_rating), 1),
                 "reviews": max(100, simulated_reviews),
                 "url": url
             })
-            
+
             time.sleep(1)  # Extra politeness delay
-            
+
     except Exception as e:
         print(f"Search failed (Rate limit or network error): {e}")
         # Fallback list used if the network or search limits are hit
         competitor_data = [
-            {"name": "Competitor A (Fallback)", "rating": 4.9, "reviews": 300, "url": "http://comp-a-fallback.com"},
-            {"name": "Competitor B (Fallback)", "rating": 4.7, "reviews": 150, "url": "http://comp-b-fallback.com"},
+            {"name": "Competitor A (Fallback)", "rating": 4.9, "reviews": 300,
+             "url": "http://comp-a-fallback.com"},
+            {"name": "Competitor B (Fallback)", "rating": 4.7, "reviews": 150,
+             "url": "http://comp-b-fallback.com"},
         ]
 
-    # Add the target business (assumed to have poor metrics, justifying the sale)
+    # Add the target business (assumed to have poor metrics)
     competitor_data.append({
-        "name": target_name, 
+        "name": target_name,
         "rating": 3.8,  # Low rating drives the "pain"
         "reviews": 45,  # Low review count drives the "gap"
         "url": "http://target-site-to-audit.com"
     })
-    
+
     return competitor_data
 
 
@@ -83,7 +86,9 @@ def audit_website_flaws(url: str) -> dict:
         audit = {
             "has_ssl": url.startswith("https"),
             # Check for common CTA text
-            "has_basic_cta": bool(soup.find('a', text=lambda t: t and 'appointment' in t.lower())),
+            "has_basic_cta": bool(
+                soup.find('a', text=lambda t: t and 'appointment' in t.lower())
+            ),
         }
         return audit
     except requests.exceptions.RequestException as e:
@@ -101,12 +106,15 @@ def model_revenue_gap(competitor_data: list) -> float:
     # Scoring: Rating is weighted 10x, reviews are weighted 1/50th.
     df['dominance_score'] = (df['rating'] * 10) + (df['reviews'] / 50)
 
-    target_score = df.loc[df['name'] == 'Target Business', 'dominance_score'].iloc[0]
-    avg_competitor_score = df.loc[df['name'] != 'Target Business', 'dominance_score'].mean()
+    target_score = df.loc[df['name'] == 'Target Business',
+                          'dominance_score'].iloc[0]
+    avg_competitor_score = df.loc[df['name'] != 'Target Business',
+                                  'dominance_score'].mean()
 
     score_difference = avg_competitor_score - target_score
 
-    # Proprietary conversion: Assume every point of dominance is worth $500 in lost monthly revenue.
+    # Proprietary conversion: Assume every point of dominance is worth $500 in 
+    # lost monthly revenue.
     estimated_gap = score_difference * 500
 
     print(f"-> 3. Modeling Complete. Target Dominance Score: {target_score:.2f}")
@@ -151,7 +159,7 @@ if __name__ == "__main__":
     # Example Target: A high-value niche (Dentist) in a competitive location
     TARGET_BUSINESS = "Dr. Smith's Dental Office"
     TARGET_LOCATION = "Chicago, IL"
-    
+
     # Run the full pipeline
     final_report = generate_crgg_report(TARGET_BUSINESS, TARGET_LOCATION)
 
@@ -161,6 +169,8 @@ if __name__ == "__main__":
     print(f"Target: {final_report.get('Target')}")
     print(f"Location: {final_report.get('Location')}")
     print("\n*** THE PITCH VALUE (The Closing Script) ***")
-    print(f"ESTIMATED LOST REVENUE: {final_report.get('Estimated_Monthly_Revenue_Loss')}")
-    print(f"Critical Flaw Status (SSL): {'Secure' if final_report.get('All_Data')[-1].get('has_ssl') else 'VULNERABLE'}")
+    print("ESTIMATED LOST REVENUE: "
+          f"{final_report.get('Estimated_Monthly_Revenue_Loss')}")
+    print("Critical Flaw Status (SSL): "
+          f"{'Secure' if final_report.get('All_Data')[-1].get('has_ssl') else 'VULNERABLE'}")
     print("=======================================================")
