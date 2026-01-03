@@ -32,7 +32,7 @@ def get_competitor_list(target_name: str, location: str,
     NOTE: Google API is bypassed due to zero-investment constraint.
     """
 
-    search_query = f"best {search_type} near {location} reviews"
+    search_query = (f"best {search_type} near {location} reviews")
     print(f"-> 1. Searching Google for: '{search_query}'...")
 
     competitor_data = []
@@ -113,7 +113,7 @@ def model_revenue_gap(competitor_data: list) -> float:
 
     score_difference = avg_competitor_score - target_score
 
-    # Proprietary conversion: Assume every point of dominance is worth $500 in 
+    # Proprietary conversion: Assume every point of dominance is worth $500 in
     # lost monthly revenue.
     estimated_gap = score_difference * 500
 
