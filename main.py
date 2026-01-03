@@ -10,14 +10,13 @@ import time
 # --- CONFIGURATION AND SECURITY ---
 # Load environment variables (API Key will be ignored, but config remains structured)
 load_dotenv()
-# W291 fixed by placing comment on its own line:
+# W291 Fixed: Removed inline comment and ensured no trailing space.
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
 
 # Load the NLP model once
 try:
     nlp = spacy.load("en_core_web_sm")
 except OSError:
-    # E261 Fixed (ensured two spaces before comment)
     print("NLP Model 'en_core_web_sm' not found. "
           "Run: python -m spacy download en_core_web_sm")
     nlp = None
@@ -37,8 +36,10 @@ def get_competitor_list(target_name: str, location: str,
     search_query = (
         f"best {search_type} near {location} reviews"
     )
-    # E501 fixed by ensuring string literals are wrapped below 79 chars.
-    print((f"-> 1. Searching Google for: '{search_query}'..."))
+    # E501 Fixed: Explicit line break of the print statement.
+    print(
+        (f"-> 1. Searching Google for: '{search_query}'...")
+    )
 
     competitor_data = []
 
@@ -107,7 +108,7 @@ def model_revenue_gap(competitor_data: list) -> float:
     'Competitive Dominance Score'.
     """
     # This is the core 'magic lure' that justifies the $499 subscription.
-    df = pd.DataFrame(competitor_data)  # Fixed W291
+    df = pd.DataFrame(competitor_data)  # W291 fixed here
 
     # Scoring: Rating is weighted 10x, reviews are weighted 1/50th.
     df['dominance_score'] = (
